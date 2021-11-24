@@ -35,6 +35,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   addGoalButton: {
-    marginHorizontal: 80,
+    marginVertical: 50,
   },
 });
