@@ -1,7 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Button, Alert } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import Card from '../components/Card';
+import MainButton from '../components/MainButton';
 import NumberContainer from '../components/NumberContainer';
+import { theme } from '../global/theme';
 
 function generateRandomBetween(min, max, exclude) {
   min = Math.ceil(min);
@@ -64,10 +67,15 @@ export default function Game(props) {
       <Text>Opponent's guess</Text>
       <NumberContainer>{currentGuess}</NumberContainer>
       <Card style={styles.buttonContainer}>
-        <Button title='LOWER' onPress={nextGuessHandler.bind(this, 'lower')} />
-        <Button
+        <MainButton
+          title='LOWER'
+          onPress={nextGuessHandler.bind(this, 'lower')}
+          color={theme.primary}
+        />
+        <MainButton
           title='GREATER'
           onPress={nextGuessHandler.bind(this, 'greater')}
+          color={'blue'}
         />
       </Card>
     </View>

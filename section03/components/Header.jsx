@@ -22,5 +22,7 @@ export const styles = StyleSheet.create({
   title: {
     color: 'black',
     fontSize: 18,
+    fontFamily: theme.fonts.PrimaryBold,
+    textTransform: 'uppercase',
   },
 });

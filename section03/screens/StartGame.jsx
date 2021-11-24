@@ -6,9 +6,12 @@ import {
   TouchableWithoutFeedback,
   Button,
   Keyboard,
+  Dimensions,
 } from 'react-native';
+import BodyText from '../components/BodyText';
 import Card from '../components/Card';
 import Input from '../components/Input';
+import MainButton from '../components/MainButton';
 import NumberContainer from '../components/NumberContainer';
 import { theme } from '../global/theme';
 
@@ -46,9 +49,13 @@ export default function StartGame(props) {
   if (userConfirmed) {
     confirmedOutput = (
       <Card style={styles.summaryContainer}>
-        <Text>You selected</Text>
+        <Text style={{ fontSize: 18 }}>You selected</Text>
         <NumberContainer>{selectedNumber}</NumberContainer>
-        <Button title='START GAME' onPress={startGameHandler} />
+        <MainButton
+          title='START GAME'
+          onPress={startGameHandler}
+          color={theme.primary}
+        />
       </Card>
     );
   }
@@ -58,7 +65,7 @@ export default function StartGame(props) {
       <View style={styles.container}>
         <Text style={styles.title}>Start Game</Text>
         <Card style={styles.inputContainer}>
-          <Text>Select a number</Text>
+          <BodyText>Select a number</BodyText>
           <Input
             style={styles.input}
             blurOnSubmit
@@ -100,6 +107,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     marginVertical: 10,
+    fontFamily: theme.fonts.PrimaryBold,
   },
   buttonWrapper: {
     flexDirection: 'row',
@@ -107,8 +115,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   inputContainer: {
-    width: 300,
-    maxWidth: '80%',
+    width: '80%',
+    maxWidth: '95%',
+    minWidth: 300,
     alignItems: 'center',
   },
   input: {
@@ -116,7 +125,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   button: {
-    width: 100,
+    width: Dimensions.get('window').width / 4,
   },
   summaryContainer: {
     marginTop: 20,
