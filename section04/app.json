@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "section03",
-    "slug": "section03",
+    "name": "section04",
+    "slug": "section04",
     "version": "1.0.0",
-    "orientation": "default",
+    "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",

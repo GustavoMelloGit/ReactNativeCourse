@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, Button, Image } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  Image,
+  ScrollView,
+} from 'react-native';
 import Success from '../assets/success.png';
 import MainButton from '../components/MainButton';
 import { theme } from '../global/theme';
@@ -7,15 +14,17 @@ import { theme } from '../global/theme';
 export default function GameOver(props) {
   const { numberOfRounds, userNumber, onReset } = props;
   return (
-    <View style={styles.screen}>
-      <Text style={styles.title}>Game is over</Text>
-      <View style={styles.imageWrapper}>
-        <Image source={Success} style={styles.image} />
+    <ScrollView>
+      <View style={styles.screen}>
+        <Text style={styles.title}>Game is over</Text>
+        <View style={styles.imageWrapper}>
+          <Image source={Success} style={styles.image} />
+        </View>
+        <Text style={styles.content}>Number of rounds: {numberOfRounds}</Text>
+        <Text style={styles.content}>Number was: {userNumber}</Text>
+        <MainButton title='NEW GAME' onPress={onReset} color={theme.primary} />
       </View>
-      <Text style={styles.content}>Number of rounds: {numberOfRounds}</Text>
-      <Text style={styles.content}>Number was: {userNumber}</Text>
-      <MainButton title='NEW GAME' onPress={onReset} color={theme.primary} />
-    </View>
+    </ScrollView>
   );
 }
 
@@ -30,14 +39,14 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   imageWrapper: {
-    width: 200,
-    height: 200,
-    borderRadius: 200 / 2,
+    width: Dimensions.get('window').width * 0.7,
+    height: Dimensions.get('window').width * 0.7,
+    borderRadius: (Dimensions.get('window').width * 0.7) / 2,
     overflow: 'hidden',
-    marginVertical: 30,
+    marginVertical: Dimensions.get('window').height / 30,
   },
   title: {
-    fontSize: 20,
+    fontSize: Dimensions.get('window').height < 400 ? 16 : 20,
     color: theme.primary,
     fontFamily: theme.fonts.PrimaryBold,
   },

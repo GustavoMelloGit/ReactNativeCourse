@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,8 @@ import {
   Button,
   Keyboard,
   Dimensions,
+  ScrollView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import BodyText from '../components/BodyText';
 import Card from '../components/Card';
@@ -19,6 +21,19 @@ export default function StartGame(props) {
   const [enteredNumber, setEnteredNumber] = useState('');
   const [userConfirmed, setUserConfirmed] = useState(false);
   const [selectedNumber, setSelectedNumber] = useState('');
+  const [buttonWidth, setButtonWidth] = useState(
+    Dimensions.get('window').width / 4
+  );
+
+  useEffect(() => {
+    const updateLayout = () => {
+      setButtonWidth(Dimensions.get('window').width / 4);
+    };
+    Dimensions.addEventListener('change', updateLayout);
+    return () => {
+      Dimensions.removeEventListener('change', updateLayout);
+    };
+  }, []);
 
   const numberInputHandler = (inputText) => {
     setEnteredNumber(inputText.replace(/[^0-9]/g, ''));
@@ -61,40 +76,44 @@ export default function StartGame(props) {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Start Game</Text>
-        <Card style={styles.inputContainer}>
-          <BodyText>Select a number</BodyText>
-          <Input
-            style={styles.input}
-            blurOnSubmit
-            autoCorrect={false}
-            keyboardType='number-pad'
-            maxLength={2}
-            value={enteredNumber}
-            onChangeText={numberInputHandler}
-          />
-          <View style={styles.buttonWrapper}>
-            <View style={styles.button}>
-              <Button
-                title='Reset'
-                color={theme.accent}
-                onPress={resetInputHandler}
+    <ScrollView>
+      <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={30}>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <View style={styles.container}>
+            <Text style={styles.title}>Start Game</Text>
+            <Card style={styles.inputContainer}>
+              <BodyText>Select a number</BodyText>
+              <Input
+                style={styles.input}
+                blurOnSubmit
+                autoCorrect={false}
+                keyboardType='number-pad'
+                maxLength={2}
+                value={enteredNumber}
+                onChangeText={numberInputHandler}
               />
-            </View>
-            <View style={styles.button}>
-              <Button
-                title='Confirm'
-                color={theme.primary}
-                onPress={confirmInputHandler}
-              />
-            </View>
+              <View style={styles.buttonWrapper}>
+                <View style={styles.button}>
+                  <Button
+                    title='Reset'
+                    color={theme.accent}
+                    onPress={resetInputHandler}
+                  />
+                </View>
+                <View style={styles.button}>
+                  <Button
+                    title='Confirm'
+                    color={theme.primary}
+                    onPress={confirmInputHandler}
+                  />
+                </View>
+              </View>
+            </Card>
+            {confirmedOutput}
           </View>
-        </Card>
-        {confirmedOutput}
-      </View>
-    </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 }
 
