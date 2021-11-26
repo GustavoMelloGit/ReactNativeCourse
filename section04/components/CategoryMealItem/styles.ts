@@ -3,7 +3,7 @@ import theme from '../../global/theme';
 
 const styles = StyleSheet.create({
   container: {
-    height: 160,
+    height: 165,
     width: Dimensions.get('window').width * 0.8,
     marginVertical: 15,
     backgroundColor: '#f5f5f5',
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   content: {
-    height: 20,
+    height: 25,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',

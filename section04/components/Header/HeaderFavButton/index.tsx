@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesome } from '@expo/vector-icons';
-import Touchable from '../ui/Touchable';
+import Touchable from '../../ui/Touchable';
 
 interface Props {
   onPress: () => void;

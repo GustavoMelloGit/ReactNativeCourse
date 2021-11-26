@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useLayoutEffect } from 'react';
 import { View, Text } from 'react-native';
-import HeaderFavButton from '../../components/HeaderFavButton';
+import HeaderFavButton from '../../components/Header/HeaderFavButton';
 import { RootStackParamList } from '../../routes/MealsNavigation';
 import { styles } from './styles';
 
@@ -14,6 +14,7 @@ export default function MealDetailScreen(props: Props): JSX.Element {
   function handleFavItem(): void {
     console.log(meal);
   }
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => <HeaderFavButton onPress={handleFavItem} />,

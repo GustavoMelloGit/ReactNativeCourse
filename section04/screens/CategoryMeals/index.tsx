@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react';
-import { FlatList } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../routes/MealsNavigation';
-import { styles } from './styles';
 import { MEALS } from '../../data/dummy-data';
-import CategoryMealItem from '../../components/CategoryMealItem';
 import Meal from '../../models/meal';
+import MealList from '../../components/MealList';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CategoryMeals'>;
 
@@ -24,13 +22,5 @@ export default function CategoryMealScreen(props: Props): JSX.Element {
     navigation.setOptions({ title: route.params.category.title });
   }, []);
 
-  return (
-    <FlatList
-      data={displayedMeals}
-      contentContainerStyle={{ alignItems: 'center' }}
-      renderItem={(item) => (
-        <CategoryMealItem item={item.item} onSelectMeal={handleSelectedMeal} />
-      )}
-    />
-  );
+  return <MealList onSelectMeal={handleSelectedMeal} meals={displayedMeals} />;
 }
