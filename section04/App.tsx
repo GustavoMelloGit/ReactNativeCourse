@@ -4,6 +4,7 @@ import AppLoading from 'expo-app-loading';
 import { enableScreens } from 'react-native-screens';
 import { NavigationContainer } from '@react-navigation/native';
 import MealsNavigation from './routes/MealsNavigation';
+import Routes from './routes';
 
 enableScreens();
 
@@ -29,7 +30,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <MealsNavigation />
+      <Routes />
     </NavigationContainer>
   );
 }

@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Category from '../models/category';
+import Meal from '../models/meal';
 import theme from '../global/theme';
 
 import CategoriesScreen from '../screens/Categories';
@@ -12,7 +13,7 @@ import MealDetailScreen from '../screens/MealDetail';
 export type RootStackParamList = {
   Categories: undefined;
   CategoryMeals: { category: Category };
-  MealDetail: undefined;
+  MealDetail: { meal: Meal };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
