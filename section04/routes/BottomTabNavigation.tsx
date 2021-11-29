@@ -5,7 +5,6 @@ import theme from '../global/theme';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import FavouritesRoute from './FavouritesRoute';
-import { headerStyles } from './styles';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { DrawerParamList } from '.';
 

@@ -3,10 +3,13 @@ import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import { enableScreens } from 'react-native-screens';
 import { NavigationContainer } from '@react-navigation/native';
-import MealsNavigation from './routes/MealsNavigation';
+import { createStore, combineReducers } from 'redux';
+import { Provider } from 'react-redux';
 import Routes from './routes';
+import mealsReducer from './store/reducers/meals';
 
 enableScreens();
+export const store = createStore(combineReducers({ meals: mealsReducer }));
 
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -29,8 +32,10 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <Routes />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Routes />
+      </NavigationContainer>
+    </Provider>
   );
 }

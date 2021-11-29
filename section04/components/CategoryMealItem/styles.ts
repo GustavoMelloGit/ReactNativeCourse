@@ -25,8 +25,9 @@ const styles = StyleSheet.create({
   content: {
     height: 25,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: 15,
   },
   textContent: {
     fontFamily: theme.fonts.primary,
