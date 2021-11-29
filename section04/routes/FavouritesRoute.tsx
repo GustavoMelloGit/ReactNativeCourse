@@ -25,7 +25,7 @@ export default function FavouritesRoute({
       }}
     >
       <Stack.Screen
-        name='Favourites'
+        name='Favorites'
         component={FavouritesScreen}
         options={{
           headerLeft: () => (

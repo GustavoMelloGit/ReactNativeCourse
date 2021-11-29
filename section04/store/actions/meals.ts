@@ -1,5 +1,11 @@
-export const TOGGLE_FAVORITE = 'TOGGLE_FAVORITE';
+import { FilterSettings } from '../../models/store';
 
-export const toggleFavourite = (id: number) => {
-  return { type: TOGGLE_FAVORITE, mealId: id };
+export const TOGGLE_FAVORITE = 'TOGGLE_FAVORITE';
+export const SET_FILTERS = 'SET_FILTERS';
+
+export const toggleFavourite = (id: string) => {
+  return { type: TOGGLE_FAVORITE, meal: id };
+};
+export const setFilters = (filterSettings: FilterSettings) => {
+  return { type: SET_FILTERS, filter: filterSettings };
 };

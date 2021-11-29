@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import Meal from '../../models/meal';
 import MealList from '../../components/MealList';
 import { RootState } from '../../models/store';
+import { Text, View } from 'react-native';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CategoryMeals'>;
 
@@ -24,5 +25,12 @@ export default function CategoryMealScreen(props: Props): JSX.Element {
     navigation.setOptions({ title: route.params.category.title });
   }, []);
 
+  if (displayedMeals.length === 0) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>No meals found, maybe check your filters?</Text>
+      </View>
+    );
+  }
   return <MealList onSelectMeal={handleSelectedMeal} meals={displayedMeals} />;
 }

@@ -1,8 +1,11 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useLayoutEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, Image } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import HeaderFavButton from '../../components/Header/HeaderFavButton';
+import { RootState } from '../../models/store';
 import { RootStackParamList } from '../../routes/MealsNavigation';
+import { toggleFavourite } from '../../store/actions/meals';
 import { styles } from './styles';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'MealDetail'>;
@@ -11,16 +14,28 @@ export default function MealDetailScreen(props: Props): JSX.Element {
   const { navigation, route } = props;
   const { meal } = route.params;
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => <HeaderFavButton onPress={handleFavItem} />,
-      title: meal.title,
-    });
-  }, []);
+  const favoriteMeals = useSelector(
+    (state: RootState) => state.meals.favouriteMeals
+  );
+  const selectedMeal = Boolean(
+    favoriteMeals.find((item) => item.id === meal.id)
+  );
+  const [favorite, setFavorite] = useState(selectedMeal);
+  const dispatch = useDispatch();
 
   function handleFavItem(): void {
-    console.log(meal);
+    dispatch(toggleFavourite(meal.id));
+    setFavorite((prev) => !prev);
   }
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <HeaderFavButton selected={favorite} onPress={handleFavItem} />
+      ),
+      title: meal.title,
+    });
+  }, [favorite]);
 
   const ingredients = meal.ingredients.map(
     (ingredient: string, index: number) => (

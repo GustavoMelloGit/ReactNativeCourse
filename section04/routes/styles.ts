@@ -5,5 +5,6 @@ export const headerStyles = StyleSheet.create({
   title: {
     color: theme.colors.primary,
     fontFamily: theme.fonts.primaryBold,
+    fontSize: 17,
   },
 });

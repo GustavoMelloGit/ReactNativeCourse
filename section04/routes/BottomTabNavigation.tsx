@@ -45,7 +45,7 @@ export default function BottomTabNavigation() {
           tabBarIcon: (props) => (
             <FontAwesome name='star-o' size={24} color={props.color} />
           ),
-          title: 'Favourites',
+          title: 'Favorites',
         }}
       />
     </Tab.Navigator>
