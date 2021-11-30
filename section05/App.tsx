@@ -1,10 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 import { Provider } from 'react-redux';
-import ProductsOverviewScreen from './screens/shop/ProductsOverview';
+import ProductsRoute from './routes/ProductsRoute';
 import store from './store';
+import { useFonts } from 'expo-font';
 
 export default function App() {
-  return <ProductsOverviewScreen />;
+  const [loaded] = useFonts({
+    RobotoRegular: require('./assets/fonts/Roboto-Regular.ttf'),
+    RobotoBold: require('./assets/fonts/Roboto-Bold.ttf'),
+    RobotoLight: require('./assets/fonts/Roboto-Light.ttf'),
+  });
+
+  if (!loaded) {
+    return null;
+  }
+  return (
+    <Provider store={store}>
+      <NavigationContainer>
+        <ProductsRoute />
+      </NavigationContainer>
+    </Provider>
+  );
 }
