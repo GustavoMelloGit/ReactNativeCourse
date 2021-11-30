@@ -5,12 +5,22 @@ interface IProductsReducer {
   userProducts: Product[];
 }
 
+interface ICartProduct {
+  product: Product;
+  quantity: number;
+}
 interface ICartReducer {
-  items: {
-    quantity: number;
-    product: Product;
-  }[];
+  items: ICartProduct[];
   totalAmount: number;
 }
 
-export { IProductsReducer, ICartReducer };
+interface IOrder {
+  id: string;
+  cartOrder: ICartReducer;
+  date: Date;
+}
+
+interface IOrderReducer {
+  orders: IOrder[];
+}
+export { IProductsReducer, ICartReducer, ICartProduct, IOrder, IOrderReducer };
