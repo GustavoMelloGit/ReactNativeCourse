@@ -19,9 +19,11 @@ interface IProductItemProps {
 export default function ProductItem(props: IProductItemProps) {
   const { product, onPress, children } = props;
   let Touchable: any = TouchableOpacity;
+
   if (Platform.OS === 'android' && Platform.Version >= 21) {
     Touchable = TouchableNativeFeedback;
   }
+
   return (
     <Touchable onPress={onPress.bind(null, product)}>
       <View style={styles.product}>

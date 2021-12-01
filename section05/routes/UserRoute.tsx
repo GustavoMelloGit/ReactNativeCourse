@@ -4,8 +4,10 @@ import UserProductsScreen from '../screens/user/UserProducts';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { Feather } from '@expo/vector-icons';
 import theme from '../global/theme';
+import EditProductScreen from '../screens/user/EditProduct';
+import RootUserRouteParamList from '../models/UserRoute';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootUserRouteParamList>();
 type Props = DrawerScreenProps<RootDrawerParamList, 'UserDrawer'>;
 
 export default function UserRoute({ navigation }: Props) {
@@ -20,7 +22,7 @@ export default function UserRoute({ navigation }: Props) {
       }}
     >
       <Stack.Screen
-        name='UserProducts'
+        name='allProducts'
         component={UserProductsScreen}
         options={{
           title: 'Your Products',
@@ -36,6 +38,11 @@ export default function UserRoute({ navigation }: Props) {
             />
           ),
         }}
+      />
+      <Stack.Screen
+        name='editProduct'
+        component={EditProductScreen}
+        options={{ title: 'Add product' }}
       />
     </Stack.Navigator>
   );

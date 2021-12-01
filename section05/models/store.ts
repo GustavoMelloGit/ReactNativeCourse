@@ -23,4 +23,20 @@ interface IOrder {
 interface IOrderReducer {
   orders: IOrder[];
 }
-export { IProductsReducer, ICartReducer, ICartProduct, IOrder, IOrderReducer };
+
+interface IEditProduct {
+  title: string;
+  description: string;
+  imageUrl: string;
+  price: string;
+  id: string;
+}
+
+export {
+  IProductsReducer,
+  ICartReducer,
+  ICartProduct,
+  IOrder,
+  IOrderReducer,
+  IEditProduct,
+};
