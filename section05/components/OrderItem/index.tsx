@@ -29,7 +29,10 @@ export default function OrderItem({ order }: Props): JSX.Element {
               </Text>
               <Text style={styles.date}>{formattedDate}</Text>
             </View>
-            <Button title='Show details' onPress={handleShowState} />
+            <Button
+              title={showDetails ? 'Hide details' : 'Show details'}
+              onPress={handleShowState}
+            />
           </View>
           {showDetails && (
             <View>

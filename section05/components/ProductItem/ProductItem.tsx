@@ -3,7 +3,6 @@ import {
   View,
   Text,
   Image,
-  Button,
   TouchableOpacity,
   TouchableNativeFeedback,
   Platform,
@@ -14,34 +13,23 @@ import styles from './styles';
 
 interface IProductItemProps {
   product: Product;
-  onViewDetail: (product: Product) => void;
-  onAddToCart: (product: Product) => void;
+  onPress: (product: Product) => void;
+  children: React.ReactNode;
 }
 export default function ProductItem(props: IProductItemProps) {
-  const { product, onAddToCart, onViewDetail } = props;
+  const { product, onPress, children } = props;
   let Touchable: any = TouchableOpacity;
   if (Platform.OS === 'android' && Platform.Version >= 21) {
     Touchable = TouchableNativeFeedback;
   }
   return (
-    <Touchable onPress={onViewDetail.bind(null, product)}>
+    <Touchable onPress={onPress.bind(null, product)}>
       <View style={styles.product}>
         <Image source={{ uri: product.imageUrl }} style={styles.image} />
         <View style={styles.content}>
           <Text style={styles.title}>{product.title}</Text>
           <Text style={styles.price}>${product.price.toFixed(2)}</Text>
-          <View style={styles.actions}>
-            <Button
-              title='View details'
-              color={theme.colors.primary}
-              onPress={onViewDetail.bind(null, product)}
-            />
-            <Button
-              title='To cart'
-              color={theme.colors.primary}
-              onPress={onAddToCart.bind(null, product)}
-            />
-          </View>
+          <View style={styles.actions}>{children}</View>
         </View>
       </View>
     </Touchable>

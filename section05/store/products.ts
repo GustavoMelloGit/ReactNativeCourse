@@ -10,7 +10,17 @@ const initialState: IProductsReducer = {
 const productsSlice = createSlice({
   name: 'products',
   initialState,
-  reducers: {},
+  reducers: {
+    deleteProduct: (state, action) => {
+      const productId: string = action.payload;
+      state.userProducts = state.userProducts.filter(
+        (prod) => prod.id !== productId
+      );
+      state.availableProducts = state.availableProducts.filter(
+        (prod) => prod.id !== productId
+      );
+    },
+  },
 });
-export const {} = productsSlice.actions;
+export const { deleteProduct } = productsSlice.actions;
 export default productsSlice.reducer;

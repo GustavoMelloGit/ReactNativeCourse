@@ -1,7 +1,6 @@
 import React, { useLayoutEffect } from 'react';
-import { FlatList } from 'react-native';
+import { Button, FlatList } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { styles } from './styles';
 import { RootState } from '../../../store';
 import ProductItem from '../../../components/ProductItem/ProductItem';
 import { RootStackParamList } from '../../../models/ProductsRoute';
@@ -9,6 +8,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import Product from '../../../models/product';
 import { addToCart } from '../../../store/cart';
 import CartHeaderButton from '../../../components/ui/CartHeaderButton';
+import ButtonComponent from '../../../components/ui/Button';
 
 type Props = StackScreenProps<RootStackParamList, 'ProductDetail'>;
 
@@ -38,11 +38,16 @@ export default function ProductsOverviewScreen({
     <FlatList
       data={prod}
       renderItem={({ item }) => (
-        <ProductItem
-          product={item}
-          onAddToCart={handleAddToCart}
-          onViewDetail={handleViewDetail}
-        />
+        <ProductItem product={item} onPress={handleViewDetail.bind(null, item)}>
+          <ButtonComponent
+            title='View details'
+            onPress={handleViewDetail.bind(null, item)}
+          />
+          <ButtonComponent
+            title='Add to cart'
+            onPress={handleAddToCart.bind(null, item)}
+          />
+        </ProductItem>
       )}
     />
   );
