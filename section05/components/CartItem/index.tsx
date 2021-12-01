@@ -9,10 +9,11 @@ interface ICartItemProps {
   product: Product;
   quantity: number;
   onRemoveItem: (product: Product, quantity: number) => void;
+  showRemoveButton?: boolean;
 }
 
 export default function CartItem(props: ICartItemProps): JSX.Element {
-  const { product, quantity, onRemoveItem } = props;
+  const { product, quantity, onRemoveItem, showRemoveButton = true } = props;
   const price = product.price * quantity;
 
   return (
@@ -23,12 +24,14 @@ export default function CartItem(props: ICartItemProps): JSX.Element {
       </Text>
       <View style={styles.priceWrapper}>
         <Text style={styles.amount}>${price.toFixed(2)}</Text>
-        <TouchableOpacity
-          onPress={onRemoveItem.bind(null, product, quantity)}
-          style={styles.deleteButton}
-        >
-          <Ionicons name='ios-trash' size={24} color='red' />
-        </TouchableOpacity>
+        {showRemoveButton && (
+          <TouchableOpacity
+            onPress={onRemoveItem.bind(null, product, quantity)}
+            style={styles.deleteButton}
+          >
+            <Ionicons name='ios-trash' size={24} color='red' />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

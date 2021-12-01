@@ -1,9 +1,9 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider } from 'react-redux';
-import ProductsRoute from './routes/ProductsRoute';
 import store from './store';
 import { useFonts } from 'expo-font';
+import Routes from './routes';
 
 export default function App() {
   const [loaded] = useFonts({
@@ -18,7 +18,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <ProductsRoute />
+        <Routes />
       </NavigationContainer>
     </Provider>
   );

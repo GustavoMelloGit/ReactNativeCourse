@@ -21,8 +21,6 @@ const ordersSlice = createSlice({
         date,
         id,
       });
-      console.log('-----------------------------------------------------');
-      console.log(state.orders);
     },
   },
 });
