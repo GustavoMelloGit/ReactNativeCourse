@@ -1,5 +1,5 @@
-import React, { useLayoutEffect } from 'react';
-import { Button, FlatList } from 'react-native';
+import React, { useEffect } from 'react';
+import { FlatList } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import ProductItem from '../../../components/ProductItem/ProductItem';
@@ -9,6 +9,7 @@ import Product from '../../../models/product';
 import { addToCart } from '../../../store/cart';
 import CartHeaderButton from '../../../components/ui/CartHeaderButton';
 import ButtonComponent from '../../../components/ui/Button';
+import { fetchProductsFromServer } from '../../../store/products';
 
 type Props = StackScreenProps<RootStackParamList, 'ProductDetail'>;
 
@@ -27,13 +28,15 @@ export default function ProductsOverviewScreen({
     navigation.navigate('ProductDetail', { product });
   }
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <CartHeaderButton onPress={() => navigation.navigate('Cart')} />
       ),
     });
-  }, []);
+    dispatch(fetchProductsFromServer());
+  }, [dispatch, navigation]);
+
   return (
     <FlatList
       data={prod}

@@ -1,12 +1,60 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { IEditProduct, IProductsReducer } from '../models/store';
-import PRODUCTS from '../data/dummy-data';
 import Product from '../models/product';
 
 const initialState: IProductsReducer = {
-  availableProducts: PRODUCTS,
-  userProducts: PRODUCTS.filter((prod) => prod.ownerId === 'u1'),
+  availableProducts: [],
+  userProducts: [],
 };
+
+export const addProductIntoServer = createAsyncThunk(
+  'products/addProductIntoServer',
+  async (product: Product, thunkAPI) => {
+    try {
+      const response = await fetch(
+        'https://reactnativecourse-f629a-default-rtdb.firebaseio.com/products.json',
+        {
+          method: 'POST',
+          body: JSON.stringify(product),
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    } catch (error) {
+      thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const fetchProductsFromServer = createAsyncThunk(
+  'products/fetchProductsFromServer',
+  async (data, thunkAPI) => {
+    try {
+      const response = await fetch(
+        'https://reactnativecourse-f629a-default-rtdb.firebaseio.com/products.json'
+      );
+      if (!response.ok) {
+        throw new Error('Something went wrong');
+      }
+      const resData = await response.json();
+      const loadedProducts = [];
+      for (const key in resData) {
+        loadedProducts.push(
+          new Product(
+            key,
+            resData[key].ownerId,
+            resData[key].title,
+            resData[key].imageUrl,
+            resData[key].description,
+            resData[key].price
+          )
+        );
+      }
+      return loadedProducts;
+    } catch (error) {
+      thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
 const productsSlice = createSlice({
   name: 'products',
@@ -40,22 +88,41 @@ const productsSlice = createSlice({
       const { title, description, imageUrl, price, id }: IEditProduct =
         action.payload;
 
-      const userProduct = state.userProducts.find((prod) => prod.id === id);
-      const availableProduct = state.availableProducts.find(
+      const updatedUserProduct = state.userProducts.findIndex(
         (prod) => prod.id === id
       );
-
-      if (userProduct && availableProduct) {
-        userProduct.title = title;
-        userProduct.description = description;
-        userProduct.imageUrl = imageUrl;
-        userProduct.price = +price;
-        availableProduct.title = title;
-        availableProduct.description = description;
-        availableProduct.imageUrl = imageUrl;
-        availableProduct.price = +price;
-      }
+      const updatedAvailableProduct = state.availableProducts.findIndex(
+        (prod) => prod.id === id
+      );
+      const updatedProduct: Product = new Product(
+        id,
+        'u1',
+        title,
+        imageUrl,
+        description,
+        +price
+      );
+      const userProducts = [...state.userProducts];
+      const availableProducts = [...state.availableProducts];
+      userProducts[updatedUserProduct] = updatedProduct;
+      availableProducts[updatedAvailableProduct] = updatedProduct;
+      state.userProducts = userProducts;
+      state.availableProducts = availableProducts;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(addProductIntoServer.fulfilled, (state, action) => {
+      // const product: Product = action.payload;
+      // state.availableProducts.push(product);
+      // state.userProducts.push(product);
+    });
+    builder.addCase(fetchProductsFromServer.fulfilled, (state, action) => {
+      if (action.payload) {
+        const products: Product[] = action.payload;
+        state.availableProducts = products;
+        state.userProducts = products.filter((prod) => prod.ownerId === 'u1');
+      }
+    });
   },
 });
 export const { deleteProduct, addProduct, editProduct } = productsSlice.actions;

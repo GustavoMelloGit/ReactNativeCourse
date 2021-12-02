@@ -7,7 +7,6 @@ import {
   TouchableNativeFeedback,
   Platform,
 } from 'react-native';
-import theme from '../../global/theme';
 import Product from '../../models/product';
 import styles from './styles';
 

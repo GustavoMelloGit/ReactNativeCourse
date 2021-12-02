@@ -1,26 +1,64 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useLayoutEffect, useRef, useState } from 'react';
-import { View, ScrollView } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import React, { useCallback, useLayoutEffect, useReducer } from 'react';
+import { View, ScrollView, Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import ButtonComponent from '../../../components/ui/Button';
 import TextInputComponent from '../../../components/ui/TextInput';
 import Product from '../../../models/product';
 import RootUserRouteParamList from '../../../models/UserRoute';
-import { addProduct, editProduct } from '../../../store/products';
+import {
+  addProduct,
+  addProductIntoServer,
+  editProduct,
+} from '../../../store/products';
 import { styles } from './styles';
 
 type Props = StackScreenProps<RootUserRouteParamList, 'editProduct'>;
+
+const formReducer = (state: any, action: any) => {
+  if (action.type === 'FORM_INPUT_UPDATE') {
+    const updatedValues = {
+      ...state.inputValues,
+      [action.input]: action.payload,
+    };
+    const updatedValidities = {
+      ...state.inputValidities,
+      [action.input]: action.isValid,
+    };
+    let formIsValid = true;
+
+    for (const key in updatedValidities) {
+      formIsValid = formIsValid && updatedValidities[key];
+    }
+
+    return {
+      formIsValid,
+      inputValues: updatedValues,
+      inputValidities: updatedValidities,
+    };
+  }
+  return state;
+};
+
 export default function EditProductScreen(props: Props): JSX.Element {
   const { navigation, route } = props;
   const { product } = route.params;
   const dispatch = useDispatch();
-  const [title, setTitle] = useState(product ? product.title : '');
-  const [description, setDescription] = useState(
-    product ? product.description : ''
-  );
-  const [price, setPrice] = useState(product ? product.price.toString() : '');
-  const [image, setImage] = useState(product ? product.imageUrl : '');
+  const [formState, setFormState] = useReducer(formReducer, {
+    inputValues: {
+      title: product ? product.title : '',
+      description: product ? product.description : '',
+      price: product ? product.price.toString() : '',
+      imageUrl: product ? product.imageUrl : '',
+    },
+    inputValidities: {
+      title: product ? true : false,
+      description: product ? true : false,
+      price: product ? true : false,
+      imageUrl: product ? true : false,
+    },
+    formIsValid: false,
+  });
 
   if (product) {
     useLayoutEffect(() => {
@@ -30,51 +68,77 @@ export default function EditProductScreen(props: Props): JSX.Element {
     }, []);
   }
 
-  const handleSubmit = (): void => {
+  const textChangeHandler = (inputIdentifier: string, text: string) => {
+    let isValid = true;
+    if (text.trim().length === 0) {
+      isValid = false;
+    }
+    setFormState({
+      type: 'FORM_INPUT_UPDATE',
+      payload: text,
+      isValid,
+      input: inputIdentifier,
+    });
+  };
+
+  const handleSubmit = useCallback((): void => {
+    if (!formState.formIsValid) {
+      Alert.alert('Wrong input', 'Please check the errors in the form.', [
+        { text: 'Okay' },
+      ]);
+      return;
+    }
     if (product) {
       dispatch(
         editProduct({
-          title,
-          description,
-          image,
-          price,
+          title: formState.inputValues.title,
+          description: formState.inputValues.description,
+          imageUrl: formState.inputValues.imageUrl,
+          price: formState.inputValues.price,
           id: product.id,
         })
       );
       navigation.goBack();
     } else {
-      const priceNumber = Number(price);
-      dispatch(
-        addProduct({ title, description, price: priceNumber, imageUrl: image })
-      );
+      const priceNumber = Number(formState.inputValues.price);
+      const product: Product = {
+        title: formState.inputValues.title,
+        description: formState.inputValues.description,
+        price: priceNumber,
+        imageUrl: formState.inputValues.imageUrl,
+        id: Math.random().toString(),
+        ownerId: 'u1',
+      };
+      dispatch(addProduct({ ...product }));
+      dispatch(addProductIntoServer(product));
       navigation.goBack();
     }
-  };
+  }, [dispatch, formState.inputValues]);
 
   return (
     <ScrollView>
       <View style={styles.container}>
         <TextInputComponent
           label='Title'
-          value={title}
-          onChangeText={setTitle}
+          value={formState.inputValues.title}
+          onChangeText={textChangeHandler.bind(null, 'title')}
         />
         <TextInputComponent
           label='Image URL'
           keyboardType='url'
-          value={image}
-          onChangeText={setImage}
+          value={formState.inputValues.imageUrl}
+          onChangeText={textChangeHandler.bind(null, 'imageUrl')}
         />
         <TextInputComponent
           label='Price'
           keyboardType='numeric'
-          value={price}
-          onChangeText={setPrice}
+          value={formState.inputValues.price}
+          onChangeText={textChangeHandler.bind(null, 'price')}
         />
         <TextInputComponent
           label='Description'
-          value={description}
-          onChangeText={setDescription}
+          value={formState.inputValues.description}
+          onChangeText={textChangeHandler.bind(null, 'description')}
         />
         <ButtonComponent
           title={product ? 'Save' : 'Add'}

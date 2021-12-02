@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useEffect, useLayoutEffect } from 'react';
+import React, { useEffect } from 'react';
 import { FlatList } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../../components/ProductItem/ProductItem';
@@ -8,15 +8,21 @@ import Product from '../../../models/product';
 import RootUserRouteParamList from '../../../models/UserRoute';
 import { RootState } from '../../../store';
 import { deleteProductFromCart } from '../../../store/cart';
-import { deleteProduct } from '../../../store/products';
+import {
+  deleteProduct,
+  fetchProductsFromServer,
+} from '../../../store/products';
 import { Ionicons } from '@expo/vector-icons';
 
 type Props = StackScreenProps<RootUserRouteParamList, 'allProducts'>;
 
 export default function UserProductsScreen({ navigation }: Props): JSX.Element {
   const dispatch = useDispatch();
+  const userProducts = useSelector(
+    (state: RootState) => state.products.userProducts
+  );
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     navigation.setOptions({
       headerRight: (headerConfig) => (
         <Ionicons
@@ -28,11 +34,7 @@ export default function UserProductsScreen({ navigation }: Props): JSX.Element {
         />
       ),
     });
-  }, []);
-
-  const userProducts = useSelector(
-    (state: RootState) => state.products.userProducts
-  );
+  }, [dispatch, navigation, fetchProductsFromServer]);
 
   const handleRemoveProduct = (product: Product) => {
     dispatch(deleteProduct(product.id));
