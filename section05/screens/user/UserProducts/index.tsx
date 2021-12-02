@@ -9,7 +9,7 @@ import RootUserRouteParamList from '../../../models/UserRoute';
 import { RootState } from '../../../store';
 import { deleteProductFromCart } from '../../../store/cart';
 import {
-  deleteProduct,
+  deleteProductFromServer,
   fetchProductsFromServer,
 } from '../../../store/products';
 import { Ionicons } from '@expo/vector-icons';
@@ -37,8 +37,9 @@ export default function UserProductsScreen({ navigation }: Props): JSX.Element {
   }, [dispatch, navigation, fetchProductsFromServer]);
 
   const handleRemoveProduct = (product: Product) => {
-    dispatch(deleteProduct(product.id));
+    dispatch(deleteProductFromServer(product.id));
     dispatch(deleteProductFromCart(product));
+    dispatch(fetchProductsFromServer());
   };
 
   const handleEditProduct = (product: Product) => {

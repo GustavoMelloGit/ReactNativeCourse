@@ -29,7 +29,7 @@ export default function ProductItem(props: IProductItemProps) {
         <Image source={{ uri: product.imageUrl }} style={styles.image} />
         <View style={styles.content}>
           <Text style={styles.title}>{product.title}</Text>
-          <Text style={styles.price}>${product.price.toFixed(2)}</Text>
+          <Text style={styles.price}>${product.price}</Text>
           <View style={styles.actions}>{children}</View>
         </View>
       </View>

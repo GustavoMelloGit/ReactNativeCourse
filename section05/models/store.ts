@@ -3,6 +3,8 @@ import Product from './product';
 interface IProductsReducer {
   availableProducts: Product[];
   userProducts: Product[];
+  status: 'idle' | 'loading';
+  error: string | null;
 }
 
 interface ICartProduct {

@@ -7,9 +7,9 @@ import TextInputComponent from '../../../components/ui/TextInput';
 import Product from '../../../models/product';
 import RootUserRouteParamList from '../../../models/UserRoute';
 import {
-  addProduct,
   addProductIntoServer,
-  editProduct,
+  editProductInServer,
+  fetchProductsFromServer,
 } from '../../../store/products';
 import { styles } from './styles';
 
@@ -44,6 +44,7 @@ export default function EditProductScreen(props: Props): JSX.Element {
   const { navigation, route } = props;
   const { product } = route.params;
   const dispatch = useDispatch();
+
   const [formState, setFormState] = useReducer(formReducer, {
     inputValues: {
       title: product ? product.title : '',
@@ -80,7 +81,6 @@ export default function EditProductScreen(props: Props): JSX.Element {
       input: inputIdentifier,
     });
   };
-
   const handleSubmit = useCallback((): void => {
     if (!formState.formIsValid) {
       Alert.alert('Wrong input', 'Please check the errors in the form.', [
@@ -90,7 +90,7 @@ export default function EditProductScreen(props: Props): JSX.Element {
     }
     if (product) {
       dispatch(
-        editProduct({
+        editProductInServer({
           title: formState.inputValues.title,
           description: formState.inputValues.description,
           imageUrl: formState.inputValues.imageUrl,
@@ -98,6 +98,7 @@ export default function EditProductScreen(props: Props): JSX.Element {
           id: product.id,
         })
       );
+      dispatch(fetchProductsFromServer());
       navigation.goBack();
     } else {
       const priceNumber = Number(formState.inputValues.price);
@@ -109,8 +110,8 @@ export default function EditProductScreen(props: Props): JSX.Element {
         id: Math.random().toString(),
         ownerId: 'u1',
       };
-      dispatch(addProduct({ ...product }));
       dispatch(addProductIntoServer(product));
+      dispatch(fetchProductsFromServer());
       navigation.goBack();
     }
   }, [dispatch, formState.inputValues]);
