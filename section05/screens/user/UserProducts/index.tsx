@@ -1,6 +1,6 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useEffect } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, ActivityIndicator, View, Text } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../../components/ProductItem/ProductItem';
 import ButtonComponent from '../../../components/ui/Button';
@@ -13,6 +13,7 @@ import {
   fetchProductsFromServer,
 } from '../../../store/products';
 import { Ionicons } from '@expo/vector-icons';
+import { styles } from './styles';
 
 type Props = StackScreenProps<RootUserRouteParamList, 'allProducts'>;
 
@@ -21,6 +22,7 @@ export default function UserProductsScreen({ navigation }: Props): JSX.Element {
   const userProducts = useSelector(
     (state: RootState) => state.products.userProducts
   );
+  const status = useSelector((state: RootState) => state.products.status);
 
   useEffect(() => {
     navigation.setOptions({
@@ -49,6 +51,22 @@ export default function UserProductsScreen({ navigation }: Props): JSX.Element {
   const handleAddProduct = () => {
     navigation.navigate('editProduct', {});
   };
+
+  if (status === 'loading') {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size='large' />
+      </View>
+    );
+  }
+  if (userProducts.length === 0) {
+    return (
+      <View style={styles.centered}>
+        <Ionicons name='ios-alert' size={64} color='#f00' />
+        <Text>No products found</Text>
+      </View>
+    );
+  }
 
   return (
     <FlatList

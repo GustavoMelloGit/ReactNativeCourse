@@ -34,6 +34,11 @@ interface IEditProduct {
   id: string;
 }
 
+interface IAuthentication {
+  email: string;
+  password: string;
+}
+
 export {
   IProductsReducer,
   ICartReducer,
@@ -41,4 +46,5 @@ export {
   IOrder,
   IOrderReducer,
   IEditProduct,
+  IAuthentication,
 };

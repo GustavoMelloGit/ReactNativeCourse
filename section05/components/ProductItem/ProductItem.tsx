@@ -17,6 +17,7 @@ interface IProductItemProps {
 }
 export default function ProductItem(props: IProductItemProps) {
   const { product, onPress, children } = props;
+  const { price, title, imageUrl } = product;
   let Touchable: any = TouchableOpacity;
 
   if (Platform.OS === 'android' && Platform.Version >= 21) {
@@ -26,10 +27,10 @@ export default function ProductItem(props: IProductItemProps) {
   return (
     <Touchable onPress={onPress.bind(null, product)}>
       <View style={styles.product}>
-        <Image source={{ uri: product.imageUrl }} style={styles.image} />
+        <Image source={{ uri: imageUrl }} style={styles.image} />
         <View style={styles.content}>
-          <Text style={styles.title}>{product.title}</Text>
-          <Text style={styles.price}>${product.price}</Text>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.price}>${price.toFixed(2)}</Text>
           <View style={styles.actions}>{children}</View>
         </View>
       </View>

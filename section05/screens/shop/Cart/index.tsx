@@ -21,12 +21,7 @@ export default function CartScreen(): JSX.Element {
   };
 
   const handleOrderNow = () => {
-    const order: IOrder = {
-      id: Math.random().toString(),
-      cartOrder: cart,
-      date: new Date(),
-    };
-    dispatch(addOrder(order));
+    dispatch(addOrder(cart));
     dispatch(cleanCart());
   };
 

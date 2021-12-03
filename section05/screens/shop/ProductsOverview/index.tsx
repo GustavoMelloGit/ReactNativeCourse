@@ -31,7 +31,7 @@ export default function ProductsOverviewScreen(props: Props): JSX.Element {
 
   const loadProducts = useCallback(async () => {
     dispatch(fetchProductsFromServer());
-  }, []);
+  }, [dispatch, fetchProductsFromServer]);
 
   useEffect(() => {
     const listener = navigation.addListener('focus', loadProducts);
@@ -78,6 +78,8 @@ export default function ProductsOverviewScreen(props: Props): JSX.Element {
           />
         </ProductItem>
       )}
+      onRefresh={loadProducts}
+      refreshing={status !== 'idle'}
     />
   );
 }

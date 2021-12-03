@@ -5,6 +5,7 @@ import Card from '../ui/Card';
 import styles from './styles';
 import moment from 'moment';
 import CartItem from '../CartItem';
+import ButtonComponent from '../ui/Button';
 
 type Props = {
   order: IOrder;
@@ -29,7 +30,7 @@ export default function OrderItem({ order }: Props): JSX.Element {
               </Text>
               <Text style={styles.date}>{formattedDate}</Text>
             </View>
-            <Button
+            <ButtonComponent
               title={showDetails ? 'Hide details' : 'Show details'}
               onPress={handleShowState}
             />
