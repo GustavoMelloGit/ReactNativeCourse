@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { FlatList, ActivityIndicator, View, Text } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../../components/ProductItem/ProductItem';
@@ -23,6 +23,15 @@ export default function UserProductsScreen({ navigation }: Props): JSX.Element {
     (state: RootState) => state.products.userProducts
   );
   const status = useSelector((state: RootState) => state.products.status);
+
+  const loadProducts = useCallback(async () => {
+    dispatch(fetchProductsFromServer());
+  }, [dispatch, fetchProductsFromServer]);
+
+  useEffect(() => {
+    const listener = navigation.addListener('focus', loadProducts);
+    return listener;
+  }, [loadProducts]);
 
   useEffect(() => {
     navigation.setOptions({

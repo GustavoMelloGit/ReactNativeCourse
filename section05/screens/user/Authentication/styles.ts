@@ -2,13 +2,12 @@ import { Dimensions, StyleSheet, StatusBar } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   cardContainer: {
-    height: 230,
     justifyContent: 'center',
+    height: 230,
     width: Dimensions.get('window').width * 0.8,
   },
   card__inner: {
@@ -21,6 +20,16 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+  },
+  contentContainerStyle: {
+    flexShrink: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

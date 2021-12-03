@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { FlatList, ActivityIndicator, View, Text } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../store';
+import { useDispatch } from 'react-redux';
+import { useTypedSelector } from '../../../store';
 import ProductItem from '../../../components/ProductItem/ProductItem';
 import { RootStackParamList } from '../../../models/ProductsRoute';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -16,11 +16,11 @@ type Props = StackScreenProps<RootStackParamList, 'ProductDetail'>;
 
 export default function ProductsOverviewScreen(props: Props): JSX.Element {
   const { navigation } = props;
-  const prod = useSelector(
-    (state: RootState) => state.products.availableProducts
+  const productList = useTypedSelector(
+    (state) => state.products.availableProducts
   );
+  const status = useTypedSelector((state) => state.products.status);
   const dispatch = useDispatch();
-  const status = useSelector((state: RootState) => state.products.status);
 
   function handleAddToCart(product: Product): void {
     dispatch(addToCart(product));
@@ -55,7 +55,7 @@ export default function ProductsOverviewScreen(props: Props): JSX.Element {
     );
   }
 
-  if (prod.length === 0) {
+  if (productList.length === 0) {
     return (
       <View style={styles.centered}>
         <Text>No products found. Maybe start adding some!</Text>
@@ -65,7 +65,7 @@ export default function ProductsOverviewScreen(props: Props): JSX.Element {
   }
   return (
     <FlatList
-      data={prod}
+      data={productList}
       renderItem={({ item }) => (
         <ProductItem product={item} onPress={handleViewDetail.bind(null, item)}>
           <ButtonComponent

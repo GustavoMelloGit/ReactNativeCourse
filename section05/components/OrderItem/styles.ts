@@ -4,9 +4,9 @@ import theme from '../../global/theme';
 const styles = StyleSheet.create({
   container: {
     marginVertical: 20,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
     paddingTop: 10,
   },
   content: {

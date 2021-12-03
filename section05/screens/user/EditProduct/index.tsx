@@ -94,24 +94,20 @@ export default function EditProductScreen(props: Props): JSX.Element {
           title: formState.inputValues.title,
           description: formState.inputValues.description,
           imageUrl: formState.inputValues.imageUrl,
-          price: formState.inputValues.price,
+          price: parseFloat(formState.inputValues.price),
           id: product.id,
         })
       );
-      dispatch(fetchProductsFromServer());
       navigation.goBack();
     } else {
       const priceNumber = Number(formState.inputValues.price);
-      const product: Product = {
+      const product = {
         title: formState.inputValues.title,
         description: formState.inputValues.description,
         price: priceNumber,
         imageUrl: formState.inputValues.imageUrl,
-        id: Math.random().toString(),
-        ownerId: 'u1',
       };
       dispatch(addProductIntoServer(product));
-      dispatch(fetchProductsFromServer());
       navigation.goBack();
     }
   }, [dispatch, formState.inputValues]);

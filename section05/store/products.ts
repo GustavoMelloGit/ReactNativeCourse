@@ -1,7 +1,27 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { IEditProduct, IProductsReducer } from '../models/store';
+import { Dispatch } from 'redux';
 import Product from '../models/product';
 import { RootState } from '.';
+
+type AsyncThunkConfig = {
+  /** return type for `thunkApi.getState` */
+  state?: RootState;
+  /** type for `thunkApi.dispatch` */
+  dispatch?: Dispatch;
+  /** type of the `extra` argument for the thunk middleware, which will be passed in as `thunkApi.extra` */
+  extra?: unknown;
+  /** type to be passed into `rejectWithValue`'s first argument that will end up on `rejectedAction.payload` */
+  rejectValue?: unknown;
+  /** return type of the `serializeError` option callback */
+  serializedErrorType?: unknown;
+  /** type to be returned from the `getPendingMeta` option callback & merged into `pendingAction.meta` */
+  pendingMeta?: unknown;
+  /** type to be passed into the second argument of `fulfillWithValue` to finally be merged into `fulfilledAction.meta` */
+  fulfilledMeta?: unknown;
+  /** type to be passed into the second argument of `rejectWithValue` to finally be merged into `rejectedAction.meta` */
+  rejectedMeta?: unknown;
+};
 
 const initialState: IProductsReducer = {
   availableProducts: [],
@@ -10,25 +30,38 @@ const initialState: IProductsReducer = {
   error: null,
 };
 
-export const addProductIntoServer = createAsyncThunk(
-  'products/addProductIntoServer',
-  async (product: Product, thunkAPI) => {
-    try {
-      const response = await fetch(
-        'https://reactnativecourse-f629a-default-rtdb.firebaseio.com/products.json',
-        {
-          method: 'POST',
-          body: JSON.stringify(product),
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      thunkAPI.rejectWithValue(error);
-    }
+export const addProductIntoServer = createAsyncThunk<
+  Product,
+  any,
+  { state: RootState }
+>('products/addProductIntoServer', async (product, thunkAPI) => {
+  const { title, description, price, imageUrl } = product;
+  const { idToken } = thunkAPI.getState().auth.user;
+  const id = Math.random().toString();
+
+  const addedProduct: Product = {
+    title,
+    description,
+    price,
+    imageUrl,
+    id,
+    ownerId: idToken,
+  };
+  try {
+    const response = await fetch(
+      `https://reactnativecourse-f629a-default-rtdb.firebaseio.com/products.json?auth=${idToken}`,
+      {
+        method: 'POST',
+        body: JSON.stringify(addedProduct),
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    thunkAPI.rejectWithValue(error);
   }
-);
+});
 
 export const fetchProductsFromServer = createAsyncThunk(
   'products/fetchProductsFromServer',
@@ -61,30 +94,34 @@ export const fetchProductsFromServer = createAsyncThunk(
   }
 );
 
-export const editProductInServer = createAsyncThunk(
-  'products/editProductInServer',
-  async (product: IEditProduct, thunkAPI) => {
-    try {
-      const response = await fetch(
-        `https://reactnativecourse-f629a-default-rtdb.firebaseio.com/products/${product.id}.json`,
-        {
-          method: 'PATCH',
-          body: JSON.stringify({
-            title: product.title,
-            description: product.description,
-            imageUrl: product.imageUrl,
-            price: product.price,
-          }),
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      thunkAPI.rejectWithValue(error);
-    }
+export const editProductInServer = createAsyncThunk<
+  IEditProduct,
+  IEditProduct,
+  {
+    state: RootState;
   }
-);
+>('products/editProductInServer', async (product: IEditProduct, thunkAPI) => {
+  const { idToken } = thunkAPI.getState().auth.user;
+  try {
+    const response = await fetch(
+      `https://reactnativecourse-f629a-default-rtdb.firebaseio.com/products/${product.id}.json?auth=${idToken}`,
+      {
+        method: 'PATCH',
+        body: JSON.stringify({
+          title: product.title,
+          description: product.description,
+          imageUrl: product.imageUrl,
+          price: product.price,
+        }),
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 export const deleteProductFromServer = createAsyncThunk(
   'products/deleteProductFromServer',

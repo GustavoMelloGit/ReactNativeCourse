@@ -1,3 +1,5 @@
+import { Dispatch } from 'redux';
+import { RootState } from '../store';
 import Product from './product';
 
 interface IProductsReducer {
@@ -30,13 +32,8 @@ interface IEditProduct {
   title: string;
   description: string;
   imageUrl: string;
-  price: string;
+  price: number;
   id: string;
-}
-
-interface IAuthentication {
-  email: string;
-  password: string;
 }
 
 export {
@@ -46,5 +43,4 @@ export {
   IOrder,
   IOrderReducer,
   IEditProduct,
-  IAuthentication,
 };

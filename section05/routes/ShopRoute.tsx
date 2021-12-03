@@ -8,7 +8,7 @@ import UserRoute from './UserRoute';
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
 
-export default function Routes() {
+export default function ShopRoutes() {
   return (
     <Drawer.Navigator
       screenOptions={{
