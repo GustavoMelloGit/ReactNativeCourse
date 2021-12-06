@@ -14,6 +14,7 @@ export default function ShopRoutes() {
       screenOptions={{
         headerTintColor: theme.colors.primary,
         headerTitleAlign: 'center',
+        drawerActiveTintColor: theme.colors.primary,
       }}
     >
       <Drawer.Screen

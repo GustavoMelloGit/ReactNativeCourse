@@ -7,7 +7,7 @@ interface IUser {
   idToken: string;
   registered: boolean;
   refreshToken: string;
-  expiresIn: number;
+  expiresIn: string;
   kind: string;
   localId: string;
   displayName: string;

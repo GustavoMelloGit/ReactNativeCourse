@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { FlatList, ActivityIndicator, View, Text } from 'react-native';
+import { FlatList, View, Text } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { useTypedSelector } from '../../../store';
 import ProductItem from '../../../components/ProductItem/ProductItem';
@@ -11,6 +11,7 @@ import CartHeaderButton from '../../../components/ui/CartHeaderButton';
 import ButtonComponent from '../../../components/ui/Button';
 import { fetchProductsFromServer } from '../../../store/products';
 import { styles } from './styles';
+import LoadingSpinner from '../../../components/LoadingSpinner';
 
 type Props = StackScreenProps<RootStackParamList, 'ProductDetail'>;
 
@@ -48,11 +49,7 @@ export default function ProductsOverviewScreen(props: Props): JSX.Element {
   }, [dispatch, navigation]);
 
   if (status === 'loading') {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size='large' color='#888' />
-      </View>
-    );
+    return <LoadingSpinner />;
   }
 
   if (productList.length === 0) {

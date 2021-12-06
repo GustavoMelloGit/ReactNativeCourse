@@ -1,6 +1,6 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useCallback, useEffect } from 'react';
-import { FlatList, ActivityIndicator, View, Text } from 'react-native';
+import { FlatList, View, Text } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../../components/ProductItem/ProductItem';
 import ButtonComponent from '../../../components/ui/Button';
@@ -14,6 +14,7 @@ import {
 } from '../../../store/products';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from './styles';
+import LoadingSpinner from '../../../components/LoadingSpinner';
 
 type Props = StackScreenProps<RootUserRouteParamList, 'allProducts'>;
 
@@ -25,13 +26,13 @@ export default function UserProductsScreen({ navigation }: Props): JSX.Element {
   const status = useSelector((state: RootState) => state.products.status);
 
   const loadProducts = useCallback(async () => {
-    dispatch(fetchProductsFromServer());
-  }, [dispatch, fetchProductsFromServer]);
+    dispatch(fetchProductsFromServer({}));
+  }, [dispatch]);
 
   useEffect(() => {
     const listener = navigation.addListener('focus', loadProducts);
     return listener;
-  }, [loadProducts]);
+  }, []);
 
   useEffect(() => {
     navigation.setOptions({
@@ -50,7 +51,6 @@ export default function UserProductsScreen({ navigation }: Props): JSX.Element {
   const handleRemoveProduct = (product: Product) => {
     dispatch(deleteProductFromServer(product.id));
     dispatch(deleteProductFromCart(product));
-    dispatch(fetchProductsFromServer());
   };
 
   const handleEditProduct = (product: Product) => {
@@ -62,11 +62,7 @@ export default function UserProductsScreen({ navigation }: Props): JSX.Element {
   };
 
   if (status === 'loading') {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size='large' />
-      </View>
-    );
+    return <LoadingSpinner />;
   }
   if (userProducts.length === 0) {
     return (

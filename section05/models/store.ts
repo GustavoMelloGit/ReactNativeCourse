@@ -26,6 +26,7 @@ interface IOrder {
 
 interface IOrderReducer {
   orders: IOrder[];
+  status: 'loading' | 'idle';
 }
 
 interface IEditProduct {

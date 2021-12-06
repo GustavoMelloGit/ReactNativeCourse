@@ -1,21 +1,36 @@
+import { DrawerScreenProps } from '@react-navigation/drawer';
 import React, { useEffect } from 'react';
 import { View, Text, FlatList } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import LoadingSpinner from '../../../components/LoadingSpinner';
 import OrderItem from '../../../components/OrderItem';
-import { RootState } from '../../../store';
+import { useTypedSelector } from '../../../store';
 import { fetchOrders } from '../../../store/orders';
 
-export default function OrdersScreen() {
-  const orders = useSelector((state: RootState) => state.order.orders);
+type Props = DrawerScreenProps<RootDrawerParamList, 'OrdersDrawer'>;
+
+export default function OrdersScreen(props: Props) {
+  const { navigation } = props;
+  const orders = useTypedSelector((state) => state.order.orders);
+  const status = useTypedSelector((state) => state.order.status);
   const dispatch = useDispatch();
 
+  function fetchData() {
+    dispatch(fetchOrders({}));
+  }
+
   useEffect(() => {
-    try {
-      dispatch(fetchOrders());
-    } catch (e) {
-      console.log(e);
-    }
-  }, [dispatch]);
+    const listener = navigation.addListener('focus', fetchData);
+    return listener;
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  if (status === 'loading') {
+    return <LoadingSpinner />;
+  }
 
   if (orders.length === 0) {
     return (
@@ -29,6 +44,8 @@ export default function OrdersScreen() {
       data={orders}
       renderItem={({ item }) => <OrderItem order={item} />}
       contentContainerStyle={{ paddingBottom: 30 }}
+      onRefresh={fetchData}
+      refreshing={status !== 'idle'}
     />
   );
 }

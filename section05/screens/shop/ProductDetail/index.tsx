@@ -12,12 +12,8 @@ type Props = StackScreenProps<RootStackParamList, 'ProductDetail'>;
 export default function ProductDetailScreen(props: Props): JSX.Element {
   const { route, navigation } = props;
   const { product } = route.params;
+  const { imageUrl, price, description } = product;
   const dispatch = useDispatch();
-
-  const formattedPrice = product.price.toLocaleString('en', {
-    style: 'currency',
-    currency: 'USD',
-  });
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -31,7 +27,7 @@ export default function ProductDetailScreen(props: Props): JSX.Element {
 
   return (
     <ScrollView>
-      <Image source={{ uri: product.imageUrl }} style={styles.image} />
+      <Image source={{ uri: imageUrl }} style={styles.image} />
       <View style={styles.addToCart}>
         <Button
           color={theme.colors.primary}
@@ -39,8 +35,8 @@ export default function ProductDetailScreen(props: Props): JSX.Element {
           onPress={handleAddToCart}
         />
       </View>
-      <Text style={styles.price}>${formattedPrice}</Text>
-      <Text style={styles.description}>{product.description}</Text>
+      <Text style={styles.price}>${price.toFixed(2)}</Text>
+      <Text style={styles.description}>{description}</Text>
     </ScrollView>
   );
 }

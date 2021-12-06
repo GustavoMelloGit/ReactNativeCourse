@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { Alert } from 'react-native';
 import { IAuthentication, IAuthReducer, IUser } from '../models/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const API_KEY = 'AIzaSyAmZs4sUKmHwOwr6cNm0iCRRhbX8z3vI5Q';
 
@@ -35,7 +36,7 @@ export const signUp = createAsyncThunk(
 
 export const logIn = createAsyncThunk(
   'auth/logInThunk',
-  async (user: IAuthentication) => {
+  async (user: IAuthentication, thunkAPI) => {
     try {
       const response = await fetch(
         `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`,
@@ -54,6 +55,7 @@ export const logIn = createAsyncThunk(
       if (!response.ok) {
         Alert.alert('Something went wrong');
       }
+      thunkAPI.dispatch(saveDataInStorage(data));
       return data;
     } catch (e: any) {
       Alert.alert(e.message);
@@ -61,6 +63,24 @@ export const logIn = createAsyncThunk(
   }
 );
 
+export const saveDataInStorage = createAsyncThunk<any, any>(
+  'auth/saveDataInStorage',
+  async (data) => {
+    const user: IUser = data;
+    const { expiresIn } = user;
+    const expirationDate = new Date(
+      new Date().getTime() + parseInt(expiresIn) * 1000
+    );
+    AsyncStorage.setItem('userData', JSON.stringify({ user, expirationDate }));
+  }
+);
+
+export const authenticate = createAsyncThunk<IUser, IUser>(
+  'auth/authenticateWithToken',
+  (user: IUser) => {
+    return user;
+  }
+);
 const initialState: IAuthReducer = {
   user: {} as IUser,
   status: 'idle',
@@ -83,6 +103,10 @@ const authSlice = createSlice({
         state.status = 'idle';
         state.error = null;
       }
+    });
+    builder.addCase(authenticate.fulfilled, (state, action) => {
+      const { ...user } = action.payload;
+      state.user = user;
     });
   },
 });
