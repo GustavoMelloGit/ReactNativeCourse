@@ -4,6 +4,7 @@ import { IAuthentication, IAuthReducer, IUser } from '../models/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const API_KEY = 'AIzaSyAmZs4sUKmHwOwr6cNm0iCRRhbX8z3vI5Q';
+let timer: NodeJS.Timeout;
 
 export const signUp = createAsyncThunk(
   'auth/signUpThunk',
@@ -63,10 +64,9 @@ export const logIn = createAsyncThunk(
   }
 );
 
-export const saveDataInStorage = createAsyncThunk<any, any>(
+export const saveDataInStorage = createAsyncThunk<any, IUser>(
   'auth/saveDataInStorage',
-  async (data) => {
-    const user: IUser = data;
+  async (user: IUser) => {
     const { expiresIn } = user;
     const expirationDate = new Date(
       new Date().getTime() + parseInt(expiresIn) * 1000
@@ -77,10 +77,34 @@ export const saveDataInStorage = createAsyncThunk<any, any>(
 
 export const authenticate = createAsyncThunk<IUser, IUser>(
   'auth/authenticateWithToken',
-  (user: IUser) => {
+  (user: IUser, thunkAPI) => {
+    thunkAPI.dispatch(setLogoutTimer(+user.expiresIn * 1000));
     return user;
   }
 );
+
+export const logOut = createAsyncThunk('auth/logOut', async () => {
+  clearLogoutTimer();
+  console.log('oi');
+  AsyncStorage.removeItem('userData');
+  return;
+});
+
+const clearLogoutTimer = () => {
+  if (timer) {
+    clearTimeout(timer);
+  }
+};
+
+export const setLogoutTimer = createAsyncThunk<any, number>(
+  'auth/setLogoutTimer',
+  (expirationTime: number, thunkAPI) => {
+    timer = setTimeout(() => {
+      thunkAPI.dispatch(logOut);
+    }, expirationTime / 1000);
+  }
+);
+
 const initialState: IAuthReducer = {
   user: {} as IUser,
   status: 'idle',
@@ -107,6 +131,9 @@ const authSlice = createSlice({
     builder.addCase(authenticate.fulfilled, (state, action) => {
       const { ...user } = action.payload;
       state.user = user;
+    });
+    builder.addCase(logOut.fulfilled, (state) => {
+      state.user = initialState.user;
     });
   },
 });

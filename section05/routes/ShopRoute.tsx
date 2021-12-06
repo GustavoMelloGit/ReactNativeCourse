@@ -5,10 +5,15 @@ import OrdersScreen from '../screens/shop/Orders';
 import { Ionicons } from '@expo/vector-icons';
 import theme from '../global/theme';
 import UserRoute from './UserRoute';
+import CustomDrawerContent from '../components/CustomDrawerComponent';
+import { StackScreenProps } from '@react-navigation/stack';
+import AuthenticationStackParamList from '../models/AuthenticationRoute';
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
+type Props = StackScreenProps<AuthenticationStackParamList, 'shop'>;
 
-export default function ShopRoutes() {
+export default function ShopRoutes(props: Props) {
+  const { navigation } = props;
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -16,6 +21,9 @@ export default function ShopRoutes() {
         headerTitleAlign: 'center',
         drawerActiveTintColor: theme.colors.primary,
       }}
+      drawerContent={(props) => (
+        <CustomDrawerContent {...props} route={navigation} />
+      )}
     >
       <Drawer.Screen
         name='ProductsDrawer'

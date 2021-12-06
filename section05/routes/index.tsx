@@ -4,7 +4,6 @@ import AuthenticationStackParamList from '../models/AuthenticationRoute';
 import AuthenticationScreen from '../screens/user/Authentication';
 import theme from '../global/theme';
 import ShopRoutes from './ShopRoute';
-import { useTypedSelector } from '../store';
 import StartupScreen from '../screens/StartupScreen';
 
 const Stack = createStackNavigator<AuthenticationStackParamList>();
