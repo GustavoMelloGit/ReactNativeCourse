@@ -1,9 +1,10 @@
 import React, { useLayoutEffect } from 'react';
-import { View, Text } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../../models/routes';
-import { Ionicons } from '@expo/vector-icons';
-import { HeaderAddButton } from '../../components/HeaderButtons';
+import { useTypedSelector } from '../../store';
+import { FlatList } from 'react-native-gesture-handler';
+import { PlaceItemComponent, HeaderAddButton } from '../../components';
+import { IPlaceModel } from '../../models/store/places/place';
 
 type PlaceListScreenProps = StackScreenProps<
   RootStackParamList,
@@ -12,9 +13,13 @@ type PlaceListScreenProps = StackScreenProps<
 
 export default function PlaceListScreen(props: PlaceListScreenProps) {
   const { navigation } = props;
+  const reduxPlaces = useTypedSelector((state) => state.places.places);
 
   function handleAddPlace() {
     navigation.navigate('NewPlaceScreen');
+  }
+  function handleGoToPlaceDetail(place: IPlaceModel) {
+    navigation.navigate('PlaceDetailScreen', { place });
   }
 
   useLayoutEffect(() => {
@@ -26,8 +31,14 @@ export default function PlaceListScreen(props: PlaceListScreenProps) {
   }, []);
 
   return (
-    <View>
-      <Text></Text>
-    </View>
+    <FlatList
+      data={reduxPlaces}
+      renderItem={({ item }) => (
+        <PlaceItemComponent
+          place={item}
+          onPress={handleGoToPlaceDetail.bind(null, item)}
+        />
+      )}
+    />
   );
 }

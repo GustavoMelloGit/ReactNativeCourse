@@ -31,7 +31,7 @@ export default function ProductsOverviewScreen(props: Props): JSX.Element {
   }
 
   const loadProducts = useCallback(async () => {
-    dispatch(fetchProductsFromServer());
+    dispatch(fetchProductsFromServer({}));
   }, [dispatch, fetchProductsFromServer]);
 
   useEffect(() => {
