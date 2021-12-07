@@ -17,11 +17,15 @@ export default function PlaceItemComponent(
   props: IPlaceItemComponent
 ): JSX.Element {
   const { place, ...rest } = props;
-
   return (
     <TouchableOpacity {...rest}>
-      <View>
-        <Text>{place.title}</Text>
+      <View style={styles.container}>
+        <View style={styles.imageWrapper}>
+          <Image source={{ uri: place.imageUri }} style={styles.image} />
+        </View>
+        <View>
+          <Text style={styles.title}>{place.title}</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );

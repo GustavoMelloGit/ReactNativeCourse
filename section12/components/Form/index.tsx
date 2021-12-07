@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Button } from 'react-native';
 import ButtonComponent from '../Button';
+import ImagePickerComponent from '../ImagePicker';
 import InputComponent from '../Input';
+import LocationPickerComponent from '../LocationPicker';
 
 interface IFormComponent {
   label: string[];
   buttonTitle: string;
-  onSubmit: (value: string[]) => void;
+  onSubmit: (value: string[], image: string) => void;
 }
 
 export default function FormComponent(props: IFormComponent): JSX.Element {
   const { label, buttonTitle, onSubmit } = props;
-  const [inputValue, setInputValue] = useState(['']);
+  const [inputValue, setInputValue] = useState<string[]>(['']);
+  const [imagePicked, setImagePicked] = useState<string>('');
 
   function handleInput(value: string, index: number): void {
     const newInputValue = [...inputValue];
@@ -20,8 +23,11 @@ export default function FormComponent(props: IFormComponent): JSX.Element {
   }
 
   function submitHandler(): void {
-    onSubmit(inputValue);
+    onSubmit(inputValue, imagePicked);
     setInputValue(['']);
+  }
+  function handleImagePicked(image: string): void {
+    setImagePicked(image);
   }
 
   const Inputs = label.map((item, index) => (
@@ -37,7 +43,11 @@ export default function FormComponent(props: IFormComponent): JSX.Element {
   return (
     <View>
       {Inputs}
-      <ButtonComponent title={buttonTitle} onPress={submitHandler} />
+      <ImagePickerComponent onImagePicked={handleImagePicked} />
+      <LocationPickerComponent />
+      <View style={{ marginTop: 10 }}>
+        <Button title={buttonTitle} onPress={submitHandler} />
+      </View>
     </View>
   );
 }

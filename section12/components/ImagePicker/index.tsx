@@ -1,31 +1,51 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image } from 'react-native';
 import ButtonComponent from '../Button';
 import styles from './styles';
 import * as ImagePicker from 'expo-image-picker';
 
-export default function ImagePickerComponent(): JSX.Element {
-  function takeImageHandler(): void {
-    // ImagePicker.getCameraPermissionsAsync().then((permissions) => {
-    //   if (permissions.granted === false) {
-    //     alert('Permission to access camera is required!');
-    //     return;
-    //   }
-    // });
+interface IImagePickerComponent {
+  onImagePicked: (image: string) => void;
+}
 
-    ImagePicker.launchCameraAsync();
+export default function ImagePickerComponent(
+  props: IImagePickerComponent
+): JSX.Element {
+  const [pickedImage, setPickedImage] = useState('');
+  const { onImagePicked } = props;
+
+  async function takeImageHandler() {
+    const permissions = await ImagePicker.getCameraPermissionsAsync();
+    if (permissions.granted === false) {
+      alert('Permission to access camera is required!');
+      return;
+    }
+    const image = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [16, 9],
+      quality: 0.5,
+    });
+
+    if (!image.cancelled) {
+      setPickedImage(image.uri);
+      onImagePicked(image.uri);
+    }
+    return;
   }
 
   return (
     <View style={styles.imagePicker}>
       <View style={styles.imagePreview}>
-        <Text>No image picked yet.</Text>
-        <Image
-          style={styles.image}
-          source={{
-            uri: 'https://www.saloodo.com/wp-content/uploads/2021/09/place-of-destination-1.png',
-          }}
-        />
+        {!!pickedImage ? (
+          <Image
+            style={styles.image}
+            source={{
+              uri: pickedImage,
+            }}
+          />
+        ) : (
+          <Text>No image picked yet.</Text>
+        )}
       </View>
       <ButtonComponent title='Take Image' onPress={takeImageHandler} />
     </View>
