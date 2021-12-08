@@ -9,6 +9,9 @@ const theme = {
     medium_2: 18,
     large: 20,
   },
+  layout: {
+    headerSpacing: 10,
+  },
 };
 
 export default theme;

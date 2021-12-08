@@ -5,6 +5,7 @@ const styles = StyleSheet.create({
   text: {
     color: theme.color.primary,
     fontSize: theme.fontSize.medium,
+    marginVertical: 10,
   },
 });
 

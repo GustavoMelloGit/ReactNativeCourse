@@ -18,8 +18,6 @@ export default function PlaceListScreen(props: PlaceListScreenProps) {
   const status = useTypedSelector((state) => state.places.status);
   const dispatch = useTypedDispatch();
 
-  console.log(reduxPlaces);
-
   function handleAddPlace() {
     navigation.navigate('NewPlaceScreen');
   }

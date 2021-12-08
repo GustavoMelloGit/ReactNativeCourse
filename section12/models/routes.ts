@@ -5,6 +5,6 @@ export type RootStackParamList = {
   PlaceDetailScreen: {
     place: IPlaceModel;
   };
-  NewPlaceScreen: undefined;
+  NewPlaceScreen?: { lat: number; lng: number };
   PlaceListScreen: undefined;
 };

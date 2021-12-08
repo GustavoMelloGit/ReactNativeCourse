@@ -1,6 +1,8 @@
+import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
-import { View, Text, Button } from 'react-native';
-import ButtonComponent from '../Button';
+import { View, Button } from 'react-native';
+import { LocationProps } from '../../helpers/location';
+import { RootStackParamList } from '../../models/routes';
 import ImagePickerComponent from '../ImagePicker';
 import InputComponent from '../Input';
 import LocationPickerComponent from '../LocationPicker';
@@ -9,10 +11,12 @@ interface IFormComponent {
   label: string[];
   buttonTitle: string;
   onSubmit: (value: string[], image: string) => void;
+  navigation: StackNavigationProp<RootStackParamList, 'NewPlaceScreen'>;
+  selectedLocation?: LocationProps;
 }
 
 export default function FormComponent(props: IFormComponent): JSX.Element {
-  const { label, buttonTitle, onSubmit } = props;
+  const { label, buttonTitle, selectedLocation, navigation, onSubmit } = props;
   const [inputValue, setInputValue] = useState<string[]>(['']);
   const [imagePicked, setImagePicked] = useState<string>('');
 
@@ -44,7 +48,10 @@ export default function FormComponent(props: IFormComponent): JSX.Element {
     <View>
       {Inputs}
       <ImagePickerComponent onImagePicked={handleImagePicked} />
-      <LocationPickerComponent />
+      <LocationPickerComponent
+        navigation={navigation}
+        selectedLocation={selectedLocation}
+      />
       <View style={{ marginTop: 10 }}>
         <Button title={buttonTitle} onPress={submitHandler} />
       </View>
