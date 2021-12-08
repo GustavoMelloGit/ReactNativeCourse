@@ -37,7 +37,7 @@ export default function PlaceListScreen(props: PlaceListScreenProps) {
   useEffect(() => {
     const listener = navigation.addListener('focus', fetchPlaces);
     return listener;
-  }, [fetchPlaces]);
+  }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({

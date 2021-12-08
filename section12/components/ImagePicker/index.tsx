@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, PermissionsAndroid } from 'react-native';
 import ButtonComponent from '../Button';
 import styles from './styles';
 import * as ImagePicker from 'expo-image-picker';
@@ -15,8 +15,10 @@ export default function ImagePickerComponent(
   const { onImagePicked } = props;
 
   async function takeImageHandler() {
-    const permissions = await ImagePicker.getCameraPermissionsAsync();
-    if (permissions.granted === false) {
+    const permissions = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.CAMERA
+    );
+    if (permissions !== 'granted') {
       alert('Permission to access camera is required!');
       return;
     }

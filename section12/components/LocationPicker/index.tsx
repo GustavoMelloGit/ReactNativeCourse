@@ -27,6 +27,12 @@ export default function LocationPickerComponent(
     return listener;
   }, []);
 
+  useEffect(() => {
+    if (selectedLocation) {
+      setLocation(selectedLocation);
+    }
+  }, []);
+
   async function handleGetLocation(): Promise<void> {
     try {
       const location = await getLocation();
@@ -38,9 +44,8 @@ export default function LocationPickerComponent(
     }
   }
 
-  function pickOnMap(): void {
+  function handlePickOnMap(): void {
     navigation.navigate('MapScreen');
-    return;
   }
 
   return (
@@ -50,7 +55,7 @@ export default function LocationPickerComponent(
           <MapPreviewComponent
             lat={location.lat}
             lng={location.lng}
-            onPress={pickOnMap}
+            onPress={handlePickOnMap}
           />
         ) : (
           <Text>No location picked yet</Text>
@@ -64,7 +69,7 @@ export default function LocationPickerComponent(
         />
         <ButtonComponent
           title='Pick on Map'
-          onPress={pickOnMap}
+          onPress={handlePickOnMap}
           style={{ alignItems: 'center' }}
         />
       </View>

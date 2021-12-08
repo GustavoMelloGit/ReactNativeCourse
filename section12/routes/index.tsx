@@ -24,8 +24,16 @@ export default function Routes() {
         options={{ title: 'All Places' }}
       />
       <Stack.Screen name='PlaceDetailScreen' component={PlaceDetailScreen} />
-      <Stack.Screen name='NewPlaceScreen' component={NewPlaceScreen} />
-      <Stack.Screen name='MapScreen' component={MapScreen} />
+      <Stack.Screen
+        name='NewPlaceScreen'
+        component={NewPlaceScreen}
+        options={{ title: 'Add Place' }}
+      />
+      <Stack.Screen
+        name='MapScreen'
+        component={MapScreen}
+        options={{ title: 'Map' }}
+      />
     </Stack.Navigator>
   );
 }

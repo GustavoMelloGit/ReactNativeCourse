@@ -10,7 +10,7 @@ const theme = {
     large: 20,
   },
   layout: {
-    headerSpacing: 10,
+    headerSpacing: 15,
   },
 };
 

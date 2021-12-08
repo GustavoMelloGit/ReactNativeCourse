@@ -8,17 +8,17 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../../models/routes';
 import { IPlaceModel } from '../../models/store/places/place';
 import { ScrollView } from 'react-native-gesture-handler';
+import { LocationProps } from '../../helpers/location';
 
 type Props = StackScreenProps<RootStackParamList, 'NewPlaceScreen'>;
 
 export default function NewPlaceScreen(props: Props): JSX.Element {
   const { navigation, route } = props;
   const { params } = route;
-
   const dispatch = useTypedDispatch();
 
   function savePlaceHandler(textValues: string[], image: string): void {
-    if (textValues.length === 0 || image === '' || !params) {
+    if (textValues.length === 0 || image === '') {
       Alert.alert('Error', 'All fields are required');
       return;
     }
@@ -28,12 +28,12 @@ export default function NewPlaceScreen(props: Props): JSX.Element {
       title: textValues[0],
       imageUri: image,
       address: 'Test',
-      lat: params.lat,
-      lng: params.lng,
+      lat: 10,
+      lng: 20,
     };
 
     dispatch(handleAddPlace(place));
-    navigation.goBack();
+    navigation.navigate('PlaceListScreen');
   }
 
   return (

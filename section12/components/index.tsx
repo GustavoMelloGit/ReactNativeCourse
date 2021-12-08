@@ -4,7 +4,7 @@ import FormComponent from './Form';
 import ImagePickerComponent from './ImagePicker';
 import PlaceItemComponent from './PlaceItem';
 import LocationPickerComponent from './LocationPicker';
-import { HeaderAddButton } from './HeaderButtons';
+import { HeaderAddButton, HeaderSaveButton } from './HeaderButtons';
 
 export {
   InputComponent,
@@ -13,5 +13,6 @@ export {
   HeaderAddButton,
   FormComponent,
   PlaceItemComponent,
+  HeaderSaveButton,
   ImagePickerComponent,
 };
