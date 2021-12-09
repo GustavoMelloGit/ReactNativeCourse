@@ -1,5 +1,5 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Button } from 'react-native';
 import { LocationProps } from '../../helpers/location';
 import { RootStackParamList } from '../../models/routes';

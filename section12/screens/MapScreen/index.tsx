@@ -5,10 +5,11 @@ import React, {
   useLayoutEffect,
   useState,
 } from 'react';
-import { Alert } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import MapView, { MapEvent, Marker, Region } from 'react-native-maps';
 import { HeaderSaveButton } from '../../components';
-import getLocation, { LocationProps } from '../../helpers/location';
+import { LocationProps } from '../../helpers/location';
+import useCurrentLocation from '../../hooks/useCurrentLocation';
 import { RootStackParamList } from '../../models/routes';
 import styles from './styles';
 
@@ -16,46 +17,34 @@ type MapScreenProps = StackScreenProps<RootStackParamList, 'MapScreen'>;
 
 export default function MapScreen(props: MapScreenProps): JSX.Element {
   const { navigation } = props;
-  const [selectedLocation, setSelectedLocation] = useState<LocationProps>();
+  const { location, error } = useCurrentLocation();
+  const [selectedLocation, setSelectedLocation] =
+    useState<LocationProps>(location);
   const [mapRegion, setMapRegion] = useState<Region>();
 
-  const fetchCurrentPosition = useCallback(async () => {
-    try {
-      const result = await getLocation();
-      if (result) {
-        setSelectedLocation(result);
-        setMapRegion({
-          latitude: result.lat,
-          longitude: result.lng,
-          latitudeDelta: 0.0322,
-          longitudeDelta: 0.0221,
-        });
-      }
-    } catch (e: any) {
-      console.log(e);
-    }
-  }, [setSelectedLocation, setMapRegion]);
-
   const handleSavePlace = useCallback(() => {
-    if (!selectedLocation) {
-      Alert.alert('No location selected');
-      return;
-    }
-    navigation.navigate('NewPlaceScreen', selectedLocation);
+    navigation.navigate('NewPlaceScreen', { ...selectedLocation });
   }, [selectedLocation]);
 
   function handleSelectLocation(event: MapEvent): void {
-    const location: LocationProps = {
+    const locationClicked: LocationProps = {
       lat: event.nativeEvent.coordinate.latitude,
       lng: event.nativeEvent.coordinate.longitude,
     };
-    setSelectedLocation(location);
+    setSelectedLocation(locationClicked);
   }
 
   useEffect(() => {
-    const listener = navigation.addListener('focus', fetchCurrentPosition);
-    return listener;
-  }, [navigation, fetchCurrentPosition]);
+    if (!!Object.keys(location).length) {
+      setMapRegion({
+        latitude: location.lat,
+        longitude: location.lng,
+        latitudeDelta: 0.0322,
+        longitudeDelta: 0.0221,
+      });
+      setSelectedLocation(location);
+    }
+  }, [location]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -63,7 +52,15 @@ export default function MapScreen(props: MapScreenProps): JSX.Element {
         <HeaderSaveButton color={props.tintColor} onPress={handleSavePlace} />
       ),
     });
-  }, []);
+  }, [navigation, handleSavePlace]);
+
+  if (!!!Object.keys(selectedLocation).length || !mapRegion) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size='large' color='#888' />
+      </View>
+    );
+  }
 
   return (
     <MapView

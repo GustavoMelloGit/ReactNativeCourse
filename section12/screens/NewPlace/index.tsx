@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, View } from 'react-native';
 import { FormComponent } from '../../components';
 import styles from './styles';
@@ -15,6 +15,9 @@ type Props = StackScreenProps<RootStackParamList, 'NewPlaceScreen'>;
 export default function NewPlaceScreen(props: Props): JSX.Element {
   const { navigation, route } = props;
   const { params } = route;
+  const [selectedLocation, setSelectedLocation] = useState<
+    LocationProps | undefined
+  >(params);
   const dispatch = useTypedDispatch();
 
   function savePlaceHandler(textValues: string[], image: string): void {
@@ -36,6 +39,12 @@ export default function NewPlaceScreen(props: Props): JSX.Element {
     navigation.navigate('PlaceListScreen');
   }
 
+  useEffect(() => {
+    if (params) {
+      setSelectedLocation(params);
+    }
+  }, []);
+
   return (
     <ScrollView>
       <View style={styles.formWrapper}>
@@ -44,7 +53,7 @@ export default function NewPlaceScreen(props: Props): JSX.Element {
           label={['Title']}
           onSubmit={savePlaceHandler}
           navigation={navigation}
-          selectedLocation={params}
+          selectedLocation={selectedLocation}
         />
       </View>
     </ScrollView>
